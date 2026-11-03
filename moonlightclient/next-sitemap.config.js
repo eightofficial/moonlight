@@ -29,7 +29,7 @@ module.exports = {
 
     // 2. Fetch Blogs
     try {
-      const response = await fetch('https://www.moonlightmachinery.com/api/blog/get')
+      const response = await fetch('https://www.moonlightmachinery.com/api/home/blog/get')
       const data = await response.json()
 
       // Agar aapka blog data kisi aur array key mein hai (jaise data.blogs), toh use yahan update kar sakte hain

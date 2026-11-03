@@ -5,7 +5,7 @@ export default function BlogCard({ post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group mb-2 mt-12 flex h-auto cursor-pointer flex-col items-start gap-4 px-4 sm:h-[120px] sm:flex-row sm:items-center sm:gap-5 md:px-0"
+      className="group mb-2 mt-12 w-full flex h-auto bg-gray-50 cursor-pointer flex-col items-start gap-4 px-4 sm:h-[120px] sm:flex-row sm:items-center sm:gap-5 md:px-0"
     >
       <div className="relative h-[180px] w-full flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 sm:h-[110px] sm:w-[180px]">
         <Image

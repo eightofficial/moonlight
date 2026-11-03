@@ -10,9 +10,6 @@ import Delimiter from "@editorjs/delimiter";
 import Marker from "@editorjs/marker";
 import Embed from "@editorjs/embed";
 
-// Ensure fallback if environment variable lacks a trailing slash
-const api = process.env.REACT_APP_API_END_POINT
-
 export const EDITOR_JS_TOOLS = {
   header: {
     class: Header,
@@ -34,8 +31,7 @@ export const EDITOR_JS_TOOLS = {
     class: Image,
     config: {
       endpoints: {
-        // Appends the base URL to prevent requesting localhost frontend directly
-        byFile: `${api}/api/blogs/uploadImage`,
+        byFile: "/api/admin/blogs/uploadImage",
       },
       field: "image",
       types: "image/*",

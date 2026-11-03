@@ -6,20 +6,17 @@ export const imgUpload = async (file) => {
   formData.append("image", file);
 
   try {
-    const response = await fetch(
-      `https://api.imgbb.com/1/upload?key=d9245b10549b7570daa4fd88a0f1de77`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch("/api/admin/blogs/uploadImage", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error("Image upload failed");
+    if (!response.ok || data.success !== 1 || !data.file?.url) {
+      throw new Error(data.message || "Image upload failed.");
     }
 
-    const data = await response.json();
-    return data.data.url;
+    return data.file.url;
   } catch (error) {
     console.error("Error uploading image:", error);
     throw error;
