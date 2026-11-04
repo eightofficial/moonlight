@@ -9,15 +9,18 @@
 
   position: relative;
   width: 100%;
-  
-  /* Desktop Size */
-  height: 600px;
+
+  aspect-ratio: 16 / 5;
+  height: auto;
   max-width: 1920px;
   margin: 0 auto;
 
   overflow: hidden;
-  background: transparent;
+  background: #faf9f5;
   outline: none;
+    display: flex;
+  justify-content: center;
+  // margin-top: 0px;
 }
 
 .cb-root * {
@@ -45,7 +48,7 @@
   right: 0;
   bottom: 0;
   z-index: 2;
-  padding: 0 180px 56px;
+  padding: 0px 180px 56px;
   display: grid;
   gap: 14px;
 }
@@ -93,6 +96,7 @@
   from {
     opacity: 0.65;
   }
+
   to {
     opacity: 1;
   }
@@ -102,6 +106,7 @@
   from {
     background-position: -200% 0;
   }
+
   to {
     background-position: 200% 0;
   }
@@ -109,16 +114,6 @@
 
 /* Compact Mobile Banner Rules */
 @media (max-width: 720px) {
-  .cb-root {
-    /* Option A: Fixed Height (uncomment if you prefer exact pixels) */
-    /* height: 280px; */
-
-    /* Option B: Fixed Aspect Ratio (16:9 ratio, stays small on all phones) */
-    height: auto;
-    aspect-ratio: 16 / 9;
-    min-height: unset;
-    max-height: 320px;
-  }
 
   /* Compact content alignment on mobile */
   .cb-content {
@@ -126,8 +121,8 @@
   }
 
   .cb-title {
-    
-    margin-bottom: 8px;
+
+    // margin-bottom: 8px;
   }
 
   // .cb-cta-btn {
@@ -163,6 +158,7 @@
   visibility: hidden;
   transition: opacity 0.7s ease;
 }
+
 .cb-slide.active {
   opacity: 1;
   visibility: visible;
@@ -174,36 +170,28 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;         /* Fills entire dimensions while preserving image aspect ratio */
-  object-position: center;   /* Keeps key subject centered */
-  transform: scale(1.04);
-  transition: transform 6s ease;
-}
-.cb-slide.active .cb-slide-image {
-  transform: scale(1);
+  object-fit: contain;
+  object-position: center;
 }
 
 .cb-slide-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(14, 13, 10, 0.15) 0%,
-    rgba(14, 13, 10, 0.15) 40%,
-    rgba(14, 13, 10, 0.88) 100%
-  );
 }
 
 /* ---------- progress bars ---------- */
 .cb-progress-row {
   position: absolute;
-  top: 20px;
-  left: 24px;
-  right: 24px;
+  bottom: 10px;
   display: flex;
+  // justify-content: center;
+  // align-items: center;
   gap: 6px;
   z-index: 3;
+  width: 100%;
+  max-width: 1200px;
 }
+
 @media (max-width: 720px) {
   .cb-progress-row {
     left: 16px;
@@ -214,32 +202,38 @@
 .cb-progress-track {
   flex: 1;
   height: 3px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgb(255, 255, 255);
   position: relative;
   overflow: hidden;
   cursor: pointer;
 }
+
 .cb-progress-fill {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   width: 0%;
-  background: var(--accent);
+  background: #ff6600;
 }
+
 .cb-progress-track.done .cb-progress-fill {
   width: 100%;
 }
+
 .cb-progress-track.active .cb-progress-fill {
   animation: cb-fill 5500ms linear forwards;
 }
+
 .cb-root.cb-paused .cb-progress-track.active .cb-progress-fill {
   animation-play-state: paused;
 }
+
 @keyframes cb-fill {
   from {
     width: 0%;
   }
+
   to {
     width: 100%;
   }
@@ -255,6 +249,7 @@
   padding: 0 180px 56px;
   max-width: 1200px;
 }
+
 @media (max-width: 720px) {
   .cb-content {
     padding: 0 20px 40px;
@@ -271,7 +266,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 5px 10px;
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
 }
 
 .cb-title {
@@ -291,6 +286,7 @@
   max-width: 52ch;
   margin: 0 0 22px 0;
 }
+
 @media (max-width: 720px) {
   .cb-desc {
     display: none;
@@ -303,11 +299,13 @@
   // gap: 20px;
   flex-wrap: wrap;
 }
+
 .cb-price {
   color: #fff;
   font-size: 18px;
   font-weight: 600;
 }
+
 .cb-cta-btn {
   // font-family: "IBM Plex Mono", monospace;
   font-size: 12px;
@@ -320,10 +318,12 @@
   // padding: 8px 16px;
   cursor: pointer;
 }
+
 .cb-cta-btn:hover {
   background: white;
   color: black;
 }
+
 .cb-cta-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -345,29 +345,36 @@
   justify-content: center;
   cursor: pointer;
 }
+
 .cb-arrow:hover {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
 }
+
 .cb-arrow:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
 .cb-arrow.prev {
   left: 20px;
 }
+
 .cb-arrow.next {
   right: 20px;
 }
+
 @media (max-width: 720px) {
   .cb-arrow {
     width: 36px;
     height: 36px;
   }
+
   .cb-arrow.prev {
     left: 10px;
   }
+
   .cb-arrow.next {
     right: 10px;
   }
@@ -384,6 +391,7 @@
   font-size: 12px;
 
 }
+
 // @media (max-width: 720px) {
 //   .cb-counter {
 //     display: none;

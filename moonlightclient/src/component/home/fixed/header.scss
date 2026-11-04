@@ -145,6 +145,39 @@
   align-items: center;
   gap: 12px;
 }
+.hd-cart-link {
+  position: relative;
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  text-decoration: none;
+}
+.hd-cart-link:hover {
+  color: var(--accent);
+}
+.hd-cart-link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.hd-cart-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
 .hd-nav {
   display: none;
   align-items: center;
@@ -281,4 +314,3 @@
     display: none;
   }
 }
-

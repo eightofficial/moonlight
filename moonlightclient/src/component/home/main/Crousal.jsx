@@ -131,13 +131,12 @@ export default function BannerCarousel() {
       whileInView={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="cb-progress-row">
+      {/* <div className="cb-progress-row">
         {data.map((_, i) => (
           <div
             key={i}
-            className={`cb-progress-track ${i < index ? "done" : ""} ${
-              i === index ? "active" : ""
-            }`}
+            className={`cb-progress-track ${i < index ? "done" : ""} ${i === index ? "active" : ""
+              }`}
             onClick={() => goTo(i)}
             role="button"
             aria-label={`Go to slide ${i + 1}`}
@@ -145,7 +144,7 @@ export default function BannerCarousel() {
             <div className="cb-progress-fill" />
           </div>
         ))}
-      </div>
+      </div> */}
 
       {data.map((s, i) => {
         const slideImage = s.slider_image || s.images?.[0] || "";
@@ -161,7 +160,7 @@ export default function BannerCarousel() {
         );
       })}
 
-      <div className="cb-content w-full max-w-[1200px]">
+      {/* <div className="cb-content w-full max-w-[1200px]">
         <h2 className="cb-title">{data[index]?.name}</h2>
         <p className="cb-desc">{data[index]?.desc}</p>
         <div className="cb-cta-row">
@@ -173,26 +172,27 @@ export default function BannerCarousel() {
             {data[index]?.cta || "Buy Now"}
           </button>
         </div>
-      </div>
+      </div> */}
 
-      <div className="cb-counter cb-mono flex right-[70px] md:right-[250px] items-center justify-center gap-8">
+      {/* <div className="cb-counter cb-mono flex flex-row-reverse right-[70px] md:right-[250px] items-center justify-center gap-8">
         <button
-          className="cb-arrow prev"
-          onClick={prev}
+          className="cb-arrow prev "
+          onClick={next}
           aria-label="Previous slide"
         >
-          <ChevronLeft size={16} />
+          <ChevronLeft size={16} className="rotate-180" />
         </button>
         <button
           className="cb-arrow next"
-          onClick={next}
+          onClick={prev}
           aria-label="Next slide"
         >
-          <ChevronRight size={16} />
+          <ChevronRight size={16} className="rotate-180"/>
         </button>
-        {/* {String(index + 1).padStart(2, "0")} /{" "}
-        {String(data.length).padStart(2, "0")} */}
-      </div>
+
+
+ 
+      </div> */}
     </motion.div>
   );
 }

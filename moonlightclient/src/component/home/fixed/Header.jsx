@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./header.scss";
 import {
   FaFacebook,
@@ -14,6 +14,8 @@ import {
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
+import { CART_UPDATED_EVENT, getCart } from "@/lib/cart";
 
 const SOCIALS = [
   {
@@ -127,6 +129,29 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
   const [mobileActivePrimary, setMobileActivePrimary] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    function updateCartCount() {
+      try {
+        const cart = getCart();
+        setCartCount(
+          cart.reduce((total, item) => total + (Number(item.quantity) || 0), 0),
+        );
+      } catch (error) {
+        console.error("Unable to read the saved cart count:", error);
+        setCartCount(0);
+      }
+    }
+
+    updateCartCount();
+    window.addEventListener(CART_UPDATED_EVENT, updateCartCount);
+    window.addEventListener("storage", updateCartCount);
+    return () => {
+      window.removeEventListener(CART_UPDATED_EVENT, updateCartCount);
+      window.removeEventListener("storage", updateCartCount);
+    };
+  }, []);
 
   return (
     <motion.header
@@ -152,6 +177,9 @@ export default function Header() {
               {s.icon}
             </a>
           ))}
+          <div className="diwali-wish text-[12px] ">
+            <p className="w-full flex items-center gap-3">Wish you Happy Diwali.<Image src={"/diya.png"} width={500} height={500} className="w-5 h-5"/></p>
+          </div>
         </div>
       </div>
 
@@ -272,6 +300,21 @@ export default function Header() {
           </nav>
 
           <div className="hd-actions">
+            <Link
+              className="hd-cart-link"
+              href="/home/cart"
+              aria-label={`Shopping cart, ${cartCount} ${
+                cartCount === 1 ? "item" : "items"
+              }`}
+              title="View cart"
+            >
+              <ShoppingCart size={21} />
+              {cartCount > 0 && (
+                <span className="hd-cart-count" aria-hidden="true">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
             <Link className="hd-shop-btn hidden md:inline-block" href="/getway">
               Login
             </Link>

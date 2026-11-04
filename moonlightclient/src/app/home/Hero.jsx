@@ -13,14 +13,16 @@ export default async function Hero() {
   const initialProducts = await getProducts();
 
   return (
-    <div className=" w-full mx-auto justify-center items-center flex flex-col gap-10">
+    <div className=" w-full mx-auto justify-center items-center flex flex-col">
       <Header />
       <BannerCarousel />
       {/* <UtilitarianHero /> */}
+      <br />
 
       <ProductShowcase
         view={true}
         initialProducts={initialProducts}
+        
       />
       <BranchRoute />
 

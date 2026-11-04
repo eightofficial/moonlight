@@ -260,6 +260,21 @@
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+.pd-cart-notice {
+  margin: -12px 0 24px;
+  font-size: 13px;
+}
+.pd-cart-notice.success {
+  color: #047857;
+}
+.pd-cart-notice.error {
+  color: #b91c1c;
+}
+.pd-cart-notice a {
+  margin-left: 4px;
+  color: #057ff2;
+  font-weight: 700;
+}
 
 .pd-meta {
   font-size: 11.5px;

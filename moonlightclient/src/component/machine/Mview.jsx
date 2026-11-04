@@ -7,11 +7,12 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getRelatedItem, getspcItem } from "@/services/home/GetProduct";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, PhoneCall } from "lucide-react";
+import { ChevronLeft, ChevronRight, PhoneCall, ShoppingCart } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Video from "@/component/home/main/Video";
 import QueryModal from "./QueryModal";
+import { addToCart } from "@/lib/cart";
 
 function money(n) {
   return (n || 0).toLocaleString("en-US", {
@@ -66,6 +67,7 @@ function RelatedSkeleton() {
 export default function Mview({ slug, initialProduct }) {
   const [activeImage, setActiveImage] = useState(0);
   const [isQueryOpen, setIsQueryOpen] = useState(false);
+  const [cartNotice, setCartNotice] = useState(null);
 
   const pathname = usePathname();
   const segments = pathname.split("/").filter((segment) => segment !== "");
@@ -136,9 +138,21 @@ export default function Mview({ slug, initialProduct }) {
 
   function handleEnquiry() {
     if (product?.name) {
-      window.location.href = `tel:${
-        process.env.NEXT_PUBLIC_BUSINESS_PHONE || "+918178445596"
-      }`;
+      window.location.href = `tel:${process.env.NEXT_PUBLIC_BUSINESS_PHONE || "+918178445596"
+        }`;
+    }
+  }
+
+  function handleAddToCart() {
+    try {
+      addToCart(product);
+      setCartNotice({ message: `${product.name} added to your cart.`, error: false });
+    } catch (cartError) {
+      console.error("Unable to add product to cart:", cartError);
+      setCartNotice({
+        message: "This product could not be added to your cart. Please try again.",
+        error: true,
+      });
     }
   }
 
@@ -354,9 +368,8 @@ Please provide more information about this product.
               return (
                 <motion.button
                   key={isVideoThumb ? `video-${i}` : item + i}
-                  className={`pd-thumb ${i === activeImage ? "active" : ""} ${
-                    isVideoThumb ? "pd-thumb-video" : ""
-                  }`}
+                  className={`pd-thumb ${i === activeImage ? "active" : ""} ${isVideoThumb ? "pd-thumb-video" : ""
+                    }`}
                   onClick={() => setActiveImage(i)}
                   aria-label={
                     isVideoThumb ? "Show product video" : `Show image ${i + 1}`
@@ -587,7 +600,26 @@ Please provide more information about this product.
           >
             <FaWhatsapp size={24} /> WhatsApp
           </motion.button>
+          <motion.button
+            type="button"
+            className="pd-add-btn py-2 flex items-center justify-center gap-3"
+            onClick={handleAddToCart}
+            title="Save product to cart"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ShoppingCart size={18} /> Add to Cart
+          </motion.button>
         </motion.div>
+        {cartNotice && (
+          <p
+            className={`pd-cart-notice ${cartNotice.error ? "error" : "success"}`}
+            role={cartNotice.error ? "alert" : "status"}
+          >
+            {cartNotice.message}{" "}
+            {!cartNotice.error && <Link href="/home/cart">View cart</Link>}
+          </p>
+        )}
       </motion.section>
 
       <QueryModal
