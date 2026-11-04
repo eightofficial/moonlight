@@ -1,10 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import "./listproduct.scss";
 import Card from "../product/Card";
 import { getItem } from "@/services/home/GetProduct";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
 const SKELETON_COUNT = 8;
@@ -32,20 +30,13 @@ function SkeletonGrid() {
   );
 }
 
-export default function ProductShowcase({ hide, view, query: initialQuery, Subcategory: initialSub, Pricategory: initialPrice }) {
-  const router = useRouter();
-  const pathname = usePathname() || "/home/machines";
-  const searchParams = useSearchParams();
-  const [mounted, setMounted] = useState(false);
-
-  // Check both variations for safety
-  const urlQuery = searchParams.get("query");
-  const urlPrice = searchParams.get("p-catagory") || searchParams.get("Pcatagory");
-  const urlSub = searchParams.get("s-catagory") || searchParams.get("Scatagory");
-
-  const activeQuery = urlQuery !== null ? urlQuery : initialQuery;
-  const activePrice = urlPrice !== null ? urlPrice : initialPrice;
-  const activeSub = urlSub !== null ? urlSub : initialSub;
+export default function ProductShowcase({
+  view,
+  query: activeQuery = "",
+  Subcategory: activeSub = "",
+  Pricategory: activePrice = "",
+  initialProducts = [],
+}) {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["item", activeQuery, activePrice, activeSub],
@@ -56,22 +47,8 @@ export default function ProductShowcase({ hide, view, query: initialQuery, Subca
         sCategory: activeSub,
       }),
     placeholderData: (previousData) => previousData,
+    initialData: initialProducts,
   });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleCategoryClick = (catQuery) => {
-    // Preserve existing search parameters using URLSearchParams
-    const params = new URLSearchParams(searchParams.toString());
-    if (catQuery) {
-      params.set("query", catQuery);
-    } else {
-      params.delete("query");
-    }
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
 
   const safeData = data || [];
 
@@ -93,7 +70,7 @@ export default function ProductShowcase({ hide, view, query: initialQuery, Subca
           <SkeletonGrid />
         ) : isError ? (
           <div className="pl-empty pl-mono">
-            Couldn't load products{error?.message ? ` — ${error.message}` : ""}.
+            Couldn&apos;t load products{error?.message ? ` — ${error.message}` : ""}.
           </div>
         ) : safeData?.length === 0 ? (
           <div className="pl-empty pl-mono">Nothing stocked here yet.</div>

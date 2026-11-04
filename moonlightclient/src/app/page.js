@@ -1,36 +1,13 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import Hero from './home/Hero'
-import CookiesConsent from '@/component/privacy/cookiesConsont/CookiesConsont'
+import Hero from "./home/Hero";
+import HomePageClient from "./HomePageClient";
 
-export default function page() {
-  const [csrfToken, setCsrfToken] = useState(null);
-  const [formRenderedAt, setFormRenderedAt] = useState(null);
-  const [error, setError] = useState(null);
+export const revalidate = 3600;
 
-  useEffect(() => {
-    fetch('/api/home/visit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ page: window.location.pathname }),
-    });
-  }, []);
-  useEffect(() => {
-    fetch("/api/getway/session/init")
-      .then((res) => res.json())
-      .then((data) => {
-        setCsrfToken(data.csrfToken);
-        setFormRenderedAt(data.formRenderedAt);
-      })
-      .catch(() =>
-        setError("Could not start a secure session. Please refresh the page."),
-      )
-      .finally();
-  }, []);
+export default function Page() {
   return (
-    <div>
+    <>
       <Hero />
-      <CookiesConsent csrfToken={csrfToken} formRenderedAt={formRenderedAt} error={error} />
-    </div>
-  )
+      <HomePageClient />
+    </>
+  );
 }

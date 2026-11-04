@@ -2,6 +2,12 @@ import Mview from "@/component/machine/Mview";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.moonlightmachinery.com";
 
+function getProductImageUrls(images = []) {
+  return images
+    .filter((image) => typeof image === "string" && image.trim())
+    .map((image) => new URL(image.trim(), SITE_URL).toString());
+}
+
 // Centralized helper using absolute URL for server-side fetching
 async function getProduct(slug) {
   if (!slug) {
@@ -36,19 +42,36 @@ export async function generateMetadata({ params }) {
   }
 
   const url = `${SITE_URL}/home/machines/${slug}`;
-  const title = product.pageTitle?.trim()
+  const title = product.pageTitle?.trim() || product.name;
   const description =
     product.metaDescription?.trim() ||
     (product.description
       ? product.description.trim().slice(0, 155)
       : `Buy ${product.name} at best price from Moonlight Machinery.`);
+  const imageUrls = getProductImageUrls(product.images);
+  const socialImages = imageUrls.length
+    ? imageUrls.map((imageUrl) => ({ url: imageUrl, alt: product.name }))
+    : undefined;
 
   return {
     title,
     description,
     keywords: product.metaKeywords,
     alternates: { canonical: url },
-    openGraph: { title, description, url, images: product.images?.[0] ? [{ url: product.images[0] }] : [] },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      url,
+      siteName: "Moonlight Machinery",
+      images: socialImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: socialImages?.map(({ url: imageUrl }) => imageUrl),
+    },
   };
 }
 
@@ -69,7 +92,7 @@ export default async function Page({ params }) {
           "@type": "Product",
           "@id": `${url}#product`,
           name: product.name,
-          image: product.images || [],
+          image: getProductImageUrls(product.images),
           description: product.description || "",
           sku: String(product.sku || product.slug).replace(/\s+/g, "-"),
           // brand: { "@type": "Brand", name: "Moonlight Machinery" },
@@ -151,7 +174,6 @@ export default async function Page({ params }) {
     </>
   );
 }
-
 
 
 

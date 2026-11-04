@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 const containerVariants = {
@@ -19,11 +20,6 @@ const cardVariants = {
 };
 
 export default function Card({ product }) {
-  const handelViewitem = (slug) => {
-    // alert(slug)
-    window.location.href = `/home/machines/${slug}`;
-  };
-
   return (
     <div>
       <motion.div
@@ -35,38 +31,41 @@ export default function Card({ product }) {
       >
         {product?.map((p) => (
           <motion.div
-            className="pl-card"
-            key={p?.name}
+            key={p?.slug || p?.name}
             variants={cardVariants}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            onClick={(e) => handelViewitem(p.slug)}
           >
-            <div className="pl-image-wrap">
-              {p.tag && (
-                <span
-                  className={`pl-tag ${p?.tag === "Low stock" ? "low" : ""}`}
-                >
-                  {p?.tag}
-                </span>
-              )}
-              <Image
-                width={500}
-                height={500}
-                alt={p?.name}
-                className="pl-image"
-                src={p?.images?.[0]}
-                loading="lazy"
-              />
-            </div>
-            <div className="pl-info">
-              <div className="text-md font-bold text-gray-700">
-                {p?.name.slice(0, 32)}...
+            <Link
+              href={`/home/machines/${p.slug}`}
+              className="pl-card block text-inherit no-underline"
+              aria-label={`View ${p.name}`}
+            >
+              <div className="pl-image-wrap">
+                {p.tag && (
+                  <span
+                    className={`pl-tag ${p?.tag === "Low stock" ? "low" : ""}`}
+                  >
+                    {p?.tag}
+                  </span>
+                )}
+                <Image
+                  width={500}
+                  height={500}
+                  alt={p?.name}
+                  className="pl-image"
+                  src={p?.images?.[0]}
+                  loading="lazy"
+                />
               </div>
-              <div className="text-lg font-bold">
-                ₹{p?.pricing.basePrice || "5000"}
+              <div className="pl-info">
+                <div className="text-md font-bold text-gray-700">
+                  {p?.name}
+                </div>
+                <div className="text-lg font-bold">
+                  ₹{p?.pricing.basePrice || "5000"}
+                </div>
               </div>
-            </div>
-            {/* <button className="pl-quick-add" onClick={(e)=>handelViewitem(p.slug)}>View Details</button> */}
+            </Link>
           </motion.div>
         ))}
       </motion.div>

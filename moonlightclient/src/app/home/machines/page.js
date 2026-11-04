@@ -1,5 +1,5 @@
 import ProductShowcase from '@/component/home/main/Listproduct';
-import React, { Suspense } from 'react';
+import { getProducts } from "@/services/home/getProducts.server";
 
 export const metadata = {
   title: "Paper Plate Making Machines in India - Hydraulic, Semi-Automatic & Panel Machines | Moonlight Machinery",
@@ -34,17 +34,30 @@ export const metadata = {
 
 export default async function page({ searchParams }) {
   const parms = await searchParams;
-  const query = parms.query || "";
+  const query = Array.isArray(parms.query)
+    ? parms.query[0] || ""
+    : parms.query || "";
   // Support both casing styles to prevent mismatches
-  const Pricategory = parms["p-catagory"] || parms["pCatagory"] || "";
-  const Subcategory = parms["s-catagory"] || parms["sCatagory"] || "";
+  const priceParam =
+    parms["p-catagory"] || parms["Pcatagory"] || parms["pCatagory"] || "";
+  const subcategoryParam =
+    parms["s-catagory"] || parms["Scatagory"] || parms["sCatagory"] || "";
+  const Pricategory = Array.isArray(priceParam) ? priceParam[0] || "" : priceParam;
+  const Subcategory = Array.isArray(subcategoryParam)
+    ? subcategoryParam[0] || ""
+    : subcategoryParam;
+  const initialProducts = await getProducts(query, Pricategory, Subcategory);
   const show = false;
 
   return (
     <div className='w-full flex justify-center'>
-      <Suspense fallback={<div>Loading...</div>}>
-        <ProductShowcase view={show} Subcategory={Subcategory} Pricategory={Pricategory} query={query} hide={true} />
-      </Suspense>
+      <ProductShowcase
+        view={show}
+        Subcategory={Subcategory}
+        Pricategory={Pricategory}
+        query={query}
+        initialProducts={initialProducts}
+      />
     </div>
   );
 }

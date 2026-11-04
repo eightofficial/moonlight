@@ -1,27 +1,27 @@
 import SectionContact from "@/component/home/main/SectionContact";
 
 import Footer from "@/component/home/fixed/Footer";
-import React, { Suspense } from 'react' // Import Suspense here
 import ProductShowcase from "@/component/home/main/Listproduct";
-import HowItWorks from "@/component/home/main/Howworks";
 import BannerCarousel from "@/component/home/main/Crousal";
 import Header from "@/component/home/fixed/Header";
 import TrustSection from "@/component/home/main/TrustSection";
 import BranchRoute from "@/component/home/main/BranchRoute";
 import FaqSection from "@/component/home/main/FaqSection";
+import { getProducts } from "@/services/home/getProducts.server";
 
-export default function Hero() {
+export default async function Hero() {
+  const initialProducts = await getProducts();
+
   return (
     <div className=" w-full mx-auto justify-center items-center flex flex-col gap-10">
       <Header />
       <BannerCarousel />
       {/* <UtilitarianHero /> */}
 
-      <Suspense
-        fallback={<div className="py-10 text-center">Loading products...</div>}
-      >
-        <ProductShowcase view={true} limit={8} hide={false} />
-      </Suspense>
+      <ProductShowcase
+        view={true}
+        initialProducts={initialProducts}
+      />
       <BranchRoute />
 
       {/* <ProductPage /> */}
