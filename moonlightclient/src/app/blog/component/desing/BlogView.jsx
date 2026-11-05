@@ -188,7 +188,7 @@ export default async function BlogPostPage({ data }) {
                 </div>
 
                 {/* Featured Cover Image */}
-                {(data.image_url || data.images?.[0]) && (
+                {/* {(data.image_url || data.images?.[0]) && (
                     <div className="relative w-full h-[280px] sm:h-[400px] mb-12 overflow-hidden rounded-2xl shadow-md bg-gray-100">
                         <Image
                             src={data.image_url || data.images[0]}
@@ -198,7 +198,7 @@ export default async function BlogPostPage({ data }) {
                             className="object-cover"
                         />
                     </div>
-                )}
+                )} */}
 
                 {/* Styled Content Container */}
                 <div className="blog-content-body">
