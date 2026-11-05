@@ -48,8 +48,8 @@
 
 /* specs section - full width below main */
 .pd-specs-section {
-  border-bottom: 1px solid var(--line-strong);
-  padding-bottom: 40px;
+  // border-bottom: 1px solid var(--line-strong);
+  // padding-bottom: 40px;
   margin-bottom: 40px;
 
 }
@@ -217,12 +217,11 @@
   font-size: 15px;
   line-height: 1.65;
   color: var(--ink-dim);
-  max-width: 46ch;
+  // max-width: 46ch;
   margin: 0 0 28px 0;
 }
 
 .pd-buy-row {
-  display: flex;
   align-items: stretch;
   gap: 12px;
   margin-bottom: 28px;

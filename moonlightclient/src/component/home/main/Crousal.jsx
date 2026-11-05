@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { slider } from "@/services/home/GetProduct";
 import { motion } from "framer-motion";
 import { ArrowLeftIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 /**
  * STOCKROOM — cinematic banner carousel
@@ -146,17 +147,21 @@ export default function BannerCarousel() {
         ))}
       </div> */}
 
+
       {data.map((s, i) => {
         const slideImage = s.slider_image || s.images?.[0] || "";
         return (
-          <div
-            className={`cb-slide ${i === index ? "active" : ""}`}
-            key={s.id || s.title || i}
-            aria-hidden={i !== index}
-          >
-            <img className="cb-slide-image" src={slideImage} alt={s.name || "Slider image"} />
-            <div className="cb-slide-scrim" />
-          </div>
+          <Link href={"/home/machines/"+s?.slug}>
+            <div
+              className={`cb-slide ${i === index ? "active" : ""}`}
+              key={s.id || s.title || i}
+              aria-hidden={i !== index}
+            >
+              <img className="cb-slide-image" src={slideImage} alt={s.name || "Slider image"} />
+              <div className="cb-slide-scrim" />
+            </div>
+          </Link>
+
         );
       })}
 

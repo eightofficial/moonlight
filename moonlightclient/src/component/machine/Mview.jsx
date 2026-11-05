@@ -401,7 +401,7 @@ Please provide more information about this product.
 
         {/* Specifications shifted to the top right side */}
         <motion.div
-          className="pd-specs-section p-8 md:p-0"
+          className="pd-specs-section p-0"
           variants={infoVariants}
           initial="hidden"
           whileInView="visible"
@@ -579,7 +579,7 @@ Please provide more information about this product.
           {product.description}
         </motion.p>
 
-        <motion.div className="pd-buy-row" variants={itemVariants}>
+        <motion.div className="pd-buy-row grid grid-cols-2 md:grid-cols-3 " variants={itemVariants}>
           <motion.button
             type="button"
             className="pd-add-btn py-2 flex items-center justify-center gap-4"
@@ -602,7 +602,7 @@ Please provide more information about this product.
           </motion.button>
           <motion.button
             type="button"
-            className="pd-add-btn py-2 flex items-center justify-center gap-3"
+            className="bg-amber-400 pd-add-btn  py-2 flex items-center justify-center gap-3"
             onClick={handleAddToCart}
             title="Save product to cart"
             whileHover={{ scale: 1.02 }}
