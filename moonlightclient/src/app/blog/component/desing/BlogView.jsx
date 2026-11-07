@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import edjsHTML from "editorjs-html";
 
@@ -121,7 +122,7 @@ const customParsers = {
 
 const edjsParser = edjsHTML(customParsers);
 
-export default async function BlogPostPage({ data }) {
+export default async function BlogPostPage({ data, products = [] }) {
     if (!data) {
         return <div className="text-center py-20 text-gray-500">Blog post not found.</div>;
     }
@@ -209,6 +210,161 @@ export default async function BlogPostPage({ data }) {
                         />
                     ))}
                 </div>
+
+                {products.length > 0 && (
+                    <section
+                        aria-labelledby="blog-products-heading"
+                        className="mt-14 border-t border-gray-200 pt-10"
+                    >
+                        <h2
+                            id="blog-products-heading"
+                            className="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl"
+                        >
+                            Products mentioned in this article
+                        </h2>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            {products.map((product) => {
+                                const images = product.images?.filter(
+                                    (item) => typeof item === "string" && item.trim(),
+                                ) || [];
+                                const specs = product.specifications || {};
+                                const dimensions = specs.dimensions;
+                                const specificationRows = [
+                                    ["SKU", product.sku],
+                                    ["Category", product.category],
+                                    ["Machine type", product.machineType],
+                                    ["Production capacity", specs.productionCapacity],
+                                    ["Motor", specs.motor],
+                                    ["Total power", specs.totalPower],
+                                    ["Power source", specs.powerSource],
+                                    ["Voltage", specs.voltage],
+                                    ["Phase", specs.phase],
+                                    ["Weight", specs.weight],
+                                    ["Raw material", specs.rawMaterial],
+                                    ["Plate size", specs.plateSizeRange],
+                                    ["Roller size", specs.rollerSize],
+                                    ["Drive", specs.drive],
+                                    ["Paper cup size", specs.paperCupSizeRange],
+                                    ["Electricity estimate", specs.electricityBillEstimate],
+                                ].filter(([, value]) => value);
+
+                                if (
+                                    dimensions &&
+                                    [dimensions.length, dimensions.width, dimensions.height].some(
+                                        (value) => value != null,
+                                    )
+                                ) {
+                                    specificationRows.push([
+                                        "Dimensions",
+                                        [
+                                            dimensions.length,
+                                            dimensions.width,
+                                            dimensions.height,
+                                        ]
+                                            .filter((value) => value != null)
+                                            .join(" × ") +
+                                            ` ${dimensions.unit || "inch"}`,
+                                    ]);
+                                }
+
+                                const basePrice = Number(product.pricing?.basePrice);
+                                const price =
+                                    Number.isFinite(basePrice) && basePrice > 0
+                                        ? `₹${basePrice.toLocaleString("en-IN")}`
+                                        : product.pricing?.priceLabel || "Contact for price";
+
+                                return (
+                                    <article
+                                        key={product.slug}
+                                        className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+                                    >
+                                        <Link
+                                            href={`/home/machines/${encodeURIComponent(product.slug)}`}
+                                            className="block"
+                                            aria-label={`View ${product.name}`}
+                                        >
+                                            <div className="relative aspect-[16/10] bg-gray-100">
+                                                {images[0] ? (
+                                                    <Image
+                                                        src={images[0]}
+                                                        alt={product.name}
+                                                        fill
+                                                        unoptimized
+                                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                                        className="object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-full items-center justify-center text-sm text-gray-500">
+                                                        Product image unavailable
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="p-5">
+                                                {images.length > 1 && (
+                                                    <div className="mb-4 flex gap-2 overflow-hidden">
+                                                        {images.slice(1, 4).map((imageUrl, index) => (
+                                                            <Image
+                                                                key={imageUrl}
+                                                                src={imageUrl}
+                                                                alt={`${product.name} image ${index + 2}`}
+                                                                width={96}
+                                                                height={64}
+                                                                unoptimized
+                                                                className="h-16 w-24 rounded-md object-cover"
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <div className="flex flex-wrap items-start justify-between gap-3">
+                                                    <h3 className="text-xl font-bold text-gray-900">
+                                                        {product.name}
+                                                    </h3>
+                                                    <span className="whitespace-nowrap font-bold text-blue-800">
+                                                        {price}
+                                                    </span>
+                                                </div>
+                                                {product.description && (
+                                                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-gray-600">
+                                                        {product.description}
+                                                    </p>
+                                                )}
+                                                {specificationRows.length > 0 && (
+                                                    <dl className="mt-5 grid grid-cols-1 gap-2 border-t border-gray-100 pt-4 sm:grid-cols-2">
+                                                        {specificationRows.map(([label, value]) => (
+                                                            <div key={label} className="text-sm">
+                                                                <dt className="font-semibold text-gray-700">
+                                                                    {label}
+                                                                </dt>
+                                                                <dd className="mt-0.5 text-gray-600">
+                                                                    {value}
+                                                                </dd>
+                                                            </div>
+                                                        ))}
+                                                    </dl>
+                                                )}
+                                                {product.features?.length > 0 && (
+                                                    <ul className="mt-4 flex flex-wrap gap-2">
+                                                        {product.features.map((feature) => (
+                                                            <li
+                                                                key={feature}
+                                                                className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-800"
+                                                            >
+                                                                {feature}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                                <span className="mt-5 inline-flex font-semibold text-blue-800">
+                                                    View product details
+                                                </span>
+                                            </div>
+                                        </Link>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
 
             </div>
         </article>

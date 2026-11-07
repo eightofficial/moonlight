@@ -1,5 +1,8 @@
 import BlogPostPage from "../component/desing/BlogView";
 import { getPublicBlogBySlug } from "@/services/public/BlogService";
+import connectDB from "@/db/mongodb/db";
+import Product from "@/db/mongodb/product/productModule_fixed";
+import { getBlogProductSlugs } from "@/lib/blogProducts";
 import { notFound } from "next/navigation";
 
 const SITE_URL = "https://www.moonlightmachinery.com";
@@ -52,6 +55,24 @@ export default async function BlogPage({ params }) {
     notFound();
   }
 
+  const productSlugs = getBlogProductSlugs(blog.content);
+  let products = [];
+
+  if (productSlugs.length) {
+    await connectDB();
+    const productRecords = await Product.find({ slug: { $in: productSlugs } })
+      .select(
+        "name slug sku description category machineType pricing images specifications features",
+      )
+      .lean();
+    const productsBySlug = new Map(
+      productRecords.map((product) => [product.slug, product]),
+    );
+    products = productSlugs
+      .map((productSlug) => productsBySlug.get(productSlug))
+      .filter(Boolean);
+  }
+
   const url = `${SITE_URL}/blog/${slug}`;
   const image = blog.image_url || blog.images?.[0];
   const jsonLd = {
@@ -102,13 +123,14 @@ export default async function BlogPage({ params }) {
 
   return (
     <>
+      <BlogPostPage data={blog} products={products} />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <BlogPostPage data={blog} />
     </>
   );
 }
