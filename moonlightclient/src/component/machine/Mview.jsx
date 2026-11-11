@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import "./style/mview.scss";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getRelatedItem, getspcItem } from "@/services/home/GetProduct";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import Video from "@/component/home/main/Video";
 import QueryModal from "./QueryModal";
 import { addToCart } from "@/lib/cart";
+import { getProductPrice } from "@/lib/productPricing";
 
 function money(n) {
   return (n || 0).toLocaleString("en-US", {
@@ -70,6 +71,7 @@ export default function Mview({ slug, initialProduct }) {
   const [cartNotice, setCartNotice] = useState(null);
 
   const pathname = usePathname();
+  const router = useRouter();
   const segments = pathname.split("/").filter((segment) => segment !== "");
 
   // Animation variants
@@ -144,6 +146,11 @@ export default function Mview({ slug, initialProduct }) {
   }
 
   function handleAddToCart() {
+    if (!isInStock) {
+      setCartNotice({ message: "This product is currently out of stock.", error: true });
+      return;
+    }
+
     try {
       addToCart(product);
       setCartNotice({ message: `${product.name} added to your cart.`, error: false });
@@ -156,6 +163,23 @@ export default function Mview({ slug, initialProduct }) {
     }
   }
 
+  function handleBuyNow() {
+    if (!isInStock) {
+      setCartNotice({ message: "This product is currently out of stock.", error: true });
+      return;
+    }
+
+    if (!product.slug) {
+      setCartNotice({
+        message: "This product cannot be checked out because it has no product link.",
+        error: true,
+      });
+      return;
+    }
+
+    router.push(`/home/checkout?product=${encodeURIComponent(product.slug)}`);
+  }
+
   function handleWhatsApp() {
     const businessPhone =
       process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "+918178445596";
@@ -164,7 +188,7 @@ export default function Mview({ slug, initialProduct }) {
 
 *Name:* ${product?.name}
 *SKU:* ${product?.sku}
-*Price:* ₹${money(product?.pricing?.basePrice || 0)}
+*Price:* ₹${money(getProductPrice(product?.pricing))}
 *Stock Available:* ${product?.stock}
 
 *Description:* ${product?.description}
@@ -250,6 +274,9 @@ Please provide more information about this product.
   }
 
   const images = product.images || [];
+  const isInStock =
+    (!product.status || product.status === "active") &&
+    Number(product.stock) > 0;
 
   const hasVideoSlide = !!product.video && !!product.video_link;
 
@@ -555,8 +582,11 @@ Please provide more information about this product.
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <span className="pd-dot" aria-hidden="true" />
-          In stock — {product.stock} available
+          <span
+            className={`pd-dot ${isInStock ? "" : "out-of-stock"}`}
+            aria-hidden="true"
+          />
+          {isInStock ? `In stock — ${product.stock} available` : "Out of stock"}
         </motion.div>
 
         <motion.h1 className="pd-name" variants={itemVariants}>
@@ -567,19 +597,23 @@ Please provide more information about this product.
         </motion.div>
 
         <motion.div className="pd-price" variants={itemVariants}>
-          ₹{money(product.pricing?.basePrice || 0)}
+          ₹{money(getProductPrice(product.pricing))}
         </motion.div>
-        {product.pricing?.otherExpenses && (
+        {product.pricing?.otherExpenses > 0 && (
           <motion.div className="pd-delivery-cost" variants={itemVariants}>
-            + ₹{money(product.pricing?.otherExpenses || 0)} Other Expenses
+            Includes base price ₹{money(product.pricing?.basePrice || 0)} and
+            other expenses ₹{money(product.pricing.otherExpenses)}
           </motion.div>
         )}
+        <motion.div className="pd-free-delivery" variants={itemVariants}>
+          Free delivery across India
+        </motion.div>
 
         <motion.p className="pd-desc" variants={itemVariants}>
           {product.description}
         </motion.p>
 
-        <motion.div className="pd-buy-row grid grid-cols-2 md:grid-cols-3 " variants={itemVariants}>
+        <motion.div className="pd-buy-row grid grid-cols-2 md:grid-cols-4 " variants={itemVariants}>
           <motion.button
             type="button"
             className="pd-add-btn py-2 flex items-center justify-center gap-4"
@@ -605,10 +639,22 @@ Please provide more information about this product.
             className="bg-amber-400 pd-add-btn  py-2 flex items-center justify-center gap-3"
             onClick={handleAddToCart}
             title="Save product to cart"
+            disabled={!isInStock}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <ShoppingCart size={18} /> Add to Cart
+          </motion.button>
+          <motion.button
+            type="button"
+            className="pd-add-btn py-2 flex items-center justify-center gap-3"
+            onClick={handleBuyNow}
+            title="Buy now with Cash on Delivery"
+            disabled={!isInStock}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Buy Now (COD)
           </motion.button>
         </motion.div>
         {cartNotice && (
@@ -669,7 +715,7 @@ Please provide more information about this product.
                   <div className="pd-related-info">
                     <div className="text-md">{p?.name.slice(0, 32)}...</div>
                     <div className="text-lg font-bold">
-                      ₹{money(p?.pricing?.basePrice || 0)}
+                      ₹{money(getProductPrice(p?.pricing))}
                     </div>
                   </div>
                 </motion.div>

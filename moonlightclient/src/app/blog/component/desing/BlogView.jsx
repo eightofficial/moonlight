@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getProductPrice } from "@/lib/productPricing";
 import React from "react";
 import edjsHTML from "editorjs-html";
 
@@ -267,11 +268,10 @@ export default async function BlogPostPage({ data, products = [] }) {
                                     ]);
                                 }
 
-                                const basePrice = Number(product.pricing?.basePrice);
-                                const price =
-                                    Number.isFinite(basePrice) && basePrice > 0
-                                        ? `₹${basePrice.toLocaleString("en-IN")}`
-                                        : product.pricing?.priceLabel || "Contact for price";
+                                const productPrice = getProductPrice(product.pricing);
+                                const price = productPrice > 0
+                                    ? `₹${productPrice.toLocaleString("en-IN")}`
+                                    : product.pricing?.priceLabel || "Contact for price";
 
                                 return (
                                     <article
