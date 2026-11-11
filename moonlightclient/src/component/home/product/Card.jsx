@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { getProductPrice } from "@/lib/productPricing";
 
 const containerVariants = {
   hidden: {},
@@ -62,7 +63,7 @@ export default function Card({ product }) {
                   {p?.name}
                 </div>
                 <div className="text-lg font-bold">
-                  ₹{p?.pricing.basePrice || "5000"}
+                  ₹{getProductPrice(p?.pricing).toLocaleString("en-IN")}
                 </div>
               </div>
             </Link>

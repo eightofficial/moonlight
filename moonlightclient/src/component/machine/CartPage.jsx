@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
 import {
   CART_UPDATED_EVENT,
   clearCart,
@@ -63,33 +62,6 @@ export default function CartPage() {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-
-  function handleOrderNow() {
-    const whatsappPhone = (
-      process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "+918178445596"
-    ).replace(/\D/g, "");
-    const orderDetails = [
-      "*Order Request*",
-      "",
-      ...items.flatMap((item, index) => [
-        `*${index + 1}. ${item.name}*`,
-        ...(item.sku ? [`SKU: ${item.sku}`] : []),
-        `Quantity: ${item.quantity}`,
-        `Price: ₹${formatPrice(item.price)} each`,
-        `Subtotal: ₹${formatPrice(item.price * item.quantity)}`,
-        "",
-      ]),
-      `*Estimated total: ₹${formatPrice(total)}*`,
-      "",
-      "Please confirm availability, final pricing, and delivery details.",
-    ].join("\n");
-
-    window.open(
-      `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(orderDetails)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-  }
 
   return (
     <main className="cart-page">
@@ -164,7 +136,9 @@ export default function CartPage() {
                     {item.name}
                   </Link>
                   {item.sku && <p className="cart-item-sku">SKU {item.sku}</p>}
-                  <p className="cart-item-price">₹{formatPrice(item.price)}</p>
+                  <p className="cart-item-price">
+                    ₹{formatPrice(item.price)} <span>per unit, including listed expenses</span>
+                  </p>
                   <div className="cart-item-controls">
                     <div className="cart-quantity">
                       <button
@@ -212,19 +186,14 @@ export default function CartPage() {
 
           <section className="cart-summary">
             <p>
-              <span>Estimated total</span>
+              <span>Order total (INR)</span>
               <strong>₹{formatPrice(total)}</strong>
             </p>
-            <small>Final pricing and availability will be confirmed by our team.</small>
+            <small>Prices include listed product expenses. Delivery across India is free. Pay in cash when delivered.</small>
             <div className="cart-summary-actions">
-              <button
-                type="button"
-                className="cart-order"
-                onClick={handleOrderNow}
-              >
-                <FaWhatsapp size={19} />
-                Order Now via WhatsApp
-              </button>
+              <Link href="/home/checkout" className="cart-order">
+                Proceed to checkout — Cash on Delivery
+              </Link>
               <Link href="/home/machines" className="cart-browse">
                 Continue browsing
               </Link>

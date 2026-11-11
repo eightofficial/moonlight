@@ -1,4 +1,5 @@
 import Mview from "@/component/machine/Mview";
+import { getProductPrice } from "@/lib/productPricing";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.moonlightmachinery.com";
 
@@ -100,26 +101,17 @@ export default async function Page({ params }) {
             "@type": "Offer",
             url,
             priceCurrency: "INR",
-            price: product.pricing?.basePrice || 0,
+            price: getProductPrice(product.pricing),
             availability:
-              (product.stock ?? 0) > 0
+              Number(product.stock) > 0
                 ? "https://schema.org/InStock"
                 : "https://schema.org/OutOfStock",
             itemCondition: "https://schema.org/NewCondition",
-            hasMerchantReturnPolicy: {
-              "@type": "MerchantReturnPolicy",
-              applicableCountry: "IN",
-              returnPolicyCategory:
-                "https://schema.org/MerchantReturnFiniteReturnWindow",
-              merchantReturnDays: 7,
-              returnMethod: "https://schema.org/ReturnByMail",
-              returnFees: "https://schema.org/FreeReturn",
-            },
             shippingDetails: {
               "@type": "OfferShippingDetails",
               shippingRate: {
                 "@type": "MonetaryAmount",
-                value: "0",
+                value: 0,
                 currency: "INR",
               },
               shippingDestination: {
@@ -174,9 +166,6 @@ export default async function Page({ params }) {
     </>
   );
 }
-
-
-
 
 
 

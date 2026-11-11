@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { getProductPrice } from "@/lib/productPricing";
 
 const containerVariants = {
   hidden: {},
@@ -82,7 +83,7 @@ export default function DiwaliCard({ product }) {
 
                 <div className="pl-diwali-copy w-full text-center">
                   <h2>{p?.name}</h2>
-                  <p>Just ₹{p?.pricing?.basePrice}</p>
+                  <p>Just ₹{getProductPrice(p?.pricing).toLocaleString("en-IN")}</p>
                 </div>
               </div>
             </Link>

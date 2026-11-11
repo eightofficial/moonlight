@@ -1,3 +1,5 @@
+import { getProductPrice } from "@/lib/productPricing";
+
 const CART_STORAGE_KEY = "moonlight-cart-v1";
 export const CART_UPDATED_EVENT = "moonlight:cart-updated";
 
@@ -24,11 +26,13 @@ export function addToCart(product) {
     throw new Error("This product cannot be added because it has no identifier.");
   }
 
+  const price = getProductPrice(product.pricing);
   const cart = getCart();
   const existingItem = cart.find((item) => item.id === id);
 
   if (existingItem) {
     existingItem.quantity += 1;
+    existingItem.price = price;
   } else {
     cart.push({
       id,
@@ -36,7 +40,7 @@ export function addToCart(product) {
       name: product.name || "Product",
       sku: product.sku || "",
       image: product.images?.[0] || "",
-      price: Number(product.pricing?.basePrice) || 0,
+      price,
       quantity: 1,
     });
   }

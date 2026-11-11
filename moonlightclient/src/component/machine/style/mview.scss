@@ -195,6 +195,15 @@
   border-radius: 50%;
   background: #5cba7d;
 }
+.pd-dot.out-of-stock {
+  background: #c43b3b;
+}
+.pd-free-delivery {
+  margin: -12px 0 20px;
+  color: #267744;
+  font-size: 14px;
+  font-weight: 600;
+}
 
 .pd-name {
   // font-family: "Archivo Black", sans-serif;

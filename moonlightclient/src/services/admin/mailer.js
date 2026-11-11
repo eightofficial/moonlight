@@ -402,6 +402,51 @@ This query was submitted from the Moonlight Machinery website.
   }
 }
 
+export async function sendCodOrderEmail(order) {
+  const {
+    orderNumber,
+    customerName,
+    customerPhone,
+    customerEmail,
+    address,
+    city,
+    state,
+    postalCode,
+    items,
+    total,
+  } = order;
+
+  const itemLines = items
+    .map(
+      (item) =>
+        `${item.name} (SKU: ${item.sku || "N/A"}) x ${item.quantity} — ₹${item.subtotal.toLocaleString("en-IN")}`,
+    )
+    .join("\n");
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: Number(process.env.SMTP_PORT || 587) === 465,
+    auth: {
+      user: process.env.NEXT_APP_SMPT_USER,
+      pass: process.env.NEXT_APP_SMPT_PASS,
+    },
+  });
+
+  try {
+    await transporter.sendMail({
+      from: `"Moonlight Machinery" <${process.env.NEXT_APP_SMPT_USER}>`,
+      to: process.env.NEXT_APP_SMPT_TO_USER,
+      replyTo: customerEmail || undefined,
+      subject: `New COD order ${orderNumber} — ${customerName}`,
+      text: `New Cash on Delivery order ${orderNumber}\n\nCustomer: ${customerName}\nPhone: ${customerPhone}\nEmail: ${customerEmail || "Not provided"}\n\nDelivery address:\n${address}\n${city}, ${state} ${postalCode}, India\n\nItems:\n${itemLines}\n\nTotal: ₹${total.toLocaleString("en-IN")}\nPayment: Cash on Delivery`,
+    });
+  } catch (error) {
+    console.error("Unable to send COD order email:", error);
+    throw new Error("Unable to notify the store about this order.");
+  }
+}
+
 
 /**
  * Escape user input before putting it inside HTML email.
@@ -414,5 +459,4 @@ function escapeHtml(value = "") {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
-
 

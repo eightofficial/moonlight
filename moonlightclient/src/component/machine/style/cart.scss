@@ -178,10 +178,17 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
 }
 
 .cart-order:hover {
   background: #166534;
+}
+
+.cart-order:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
 .cart-order:focus-visible {
@@ -232,6 +239,129 @@
   color: #b91c1c;
 }
 
+.cart-item-price span {
+  color: #77766c;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  align-items: start;
+  gap: 28px;
+}
+
+.checkout-form,
+.checkout-summary {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid #d9d6c9;
+  background: #fff;
+}
+
+.checkout-form h2,
+.checkout-summary h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.checkout-form label {
+  display: grid;
+  gap: 7px;
+  color: #333228;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.checkout-form input,
+.checkout-form textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #b8b5a4;
+  border-radius: 0;
+  background: #fff;
+  color: #15140f;
+  font: inherit;
+}
+
+.checkout-form textarea {
+  resize: vertical;
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus {
+  outline: 2px solid #057ff2;
+  outline-offset: 1px;
+}
+
+.checkout-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.checkout-back {
+  color: #15140f;
+  text-align: center;
+}
+
+.checkout-summary {
+  gap: 0;
+}
+
+.checkout-summary h2 {
+  margin-bottom: 12px;
+}
+
+.checkout-summary-item,
+.checkout-summary-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #d9d6c9;
+}
+
+.checkout-summary-item span {
+  overflow-wrap: anywhere;
+}
+
+.checkout-summary-item strong,
+.checkout-summary-total strong {
+  white-space: nowrap;
+}
+
+.checkout-summary-total {
+  margin-top: 6px;
+  border-bottom: 0;
+  font-size: 18px;
+}
+
+.checkout-summary p {
+  margin: 8px 0 0;
+  color: #5a594e;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.checkout-success {
+  min-height: 300px;
+}
+
+.checkout-success h1 {
+  margin: 0;
+  color: #15140f;
+}
+
+.checkout-success p {
+  max-width: 560px;
+  margin: 0;
+  line-height: 1.6;
+}
+
 @media (max-width: 600px) {
   .cart-page {
     padding: 32px 0 48px;
@@ -260,5 +390,18 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 8px;
+  }
+
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-form,
+  .checkout-summary {
+    padding: 18px;
+  }
+
+  .checkout-form-row {
+    grid-template-columns: 1fr;
   }
 }
