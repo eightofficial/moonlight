@@ -5,6 +5,7 @@ import { getItem } from "@/services/home/GetProduct";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import DiwaliCard from "../product/DiwaliCard";
+import ChhathPuja from "../product/ChhathPuja";
 
 const SKELETON_COUNT = 8;
 
@@ -76,7 +77,7 @@ export default function ProductShowcase({
         ) : safeData?.length === 0 ? (
           <div className="pl-empty pl-mono">Nothing stocked here yet.</div>
         ) : (
-          <DiwaliCard product={safeData} key={activeQuery || activePrice || "all"} />
+          <ChhathPuja product={safeData} key={activeQuery || activePrice || "all"} />
         )}
         {view && (
           <div className="pl-footer">
