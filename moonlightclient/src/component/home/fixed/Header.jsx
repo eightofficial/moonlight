@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { Cloud, ShoppingCart } from "lucide-react";
 import { CART_UPDATED_EVENT, getCart } from "@/lib/cart";
 
 const SOCIALS = [
@@ -178,7 +178,7 @@ export default function Header() {
             </a>
           ))}
           <div className="diwali-wish text-[12px] ">
-            <p className="w-full flex items-center gap-3">Wish you Happy Diwali.<Image src={"/diya.png"} width={500} height={500} className="w-5 h-5"/></p>
+            <p className="w-full flex items-center gap-3">Chhath Puja Special<Cloud fill="orrange" className="w-6 h-6 text-orange-500 fill-orange-500"/></p>
           </div>
         </div>
       </div>
