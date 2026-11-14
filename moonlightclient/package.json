@@ -52,6 +52,7 @@
     "@editorjs/marker": "^1.4.0",
     "@editorjs/quote": "^2.7.6",
     "@editorjs/table": "^2.4.6",
+    "@imagekit/nodejs": "^7.14.0",
     "editorjs-html": "^4.0.5"
   },
   "devDependencies": {

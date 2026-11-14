@@ -16,6 +16,10 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Image uploads
+
+Set `IMAGEKIT_PRIVATE_KEY` in the server environment for admin product image uploads. Keep it private and do not prefix it with `NEXT_PUBLIC_`. Blog image uploads continue to use ImgBB via `IMGBB_API_KEY`.
+
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

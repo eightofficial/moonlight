@@ -9,7 +9,7 @@ import {
   sliderUpdate,
   updateProduct,
 } from "@/services/admin/apiService/Product";
-import { imgUpload } from "@/services/admin/imgbb/imgbbuploader";
+import { imageKitUpload } from "@/services/admin/imagekit/imagekitUploader";
 import "./amodal.scss";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { slugify } from "@/utilis/slujgify";
@@ -421,14 +421,14 @@ export default function ProductAdmin({ compact = false }) {
     await Promise.all(
       previews.map(async ({ file, preview }) => {
         try {
-          const url = await imgUpload(file);
+          const url = await imageKitUpload(file);
           // replace preview with final url
           setDraft((prev) => ({
             ...prev,
             images: prev.images.map((img) => (img === preview ? url : img)),
           }));
         } catch (err) {
-          console.error("imgbb upload failed for file:", file.name, err);
+          console.error("ImageKit upload failed for file:", file.name, err);
           // remove the preview on failure
           setDraft((prev) => ({
             ...prev,
@@ -466,7 +466,7 @@ export default function ProductAdmin({ compact = false }) {
     if (!file) return;
     setSliderUploading(true);
     try {
-      const url = await imgUpload(file);
+      const url = await imageKitUpload(file);
       setField("slider_image", url);
       setField("slider", true);
     } catch (error) {
