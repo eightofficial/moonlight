@@ -3,7 +3,10 @@ const nextConfig = {
   /* config options here */
   reactCompiler: true,
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'i.ibb.co', port: '', pathname: '/**' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'i.ibb.co', port: '', pathname: '/**' },
+      { protocol: 'https', hostname: 'ik.imagekit.io', port: '', pathname: '/**' },
+    ],
     dangerouslyAllowLocalIP: process.env.NODE_ENV === 'development',
   },
   async headers() {
