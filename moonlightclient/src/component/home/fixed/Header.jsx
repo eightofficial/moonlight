@@ -177,9 +177,9 @@ export default function Header() {
               {s.icon}
             </a>
           ))}
-          <div className="diwali-wish text-[12px] ">
+          {/* <div className="diwali-wish text-[12px] ">
             <p className="w-full flex items-center gap-3">Chhath Puja Special<Cloud fill="orrange" className="w-6 h-6 text-orange-500 fill-orange-500"/></p>
-          </div>
+          </div> */}
         </div>
       </div>
 
