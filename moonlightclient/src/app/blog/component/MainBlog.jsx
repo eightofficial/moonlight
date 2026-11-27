@@ -1,6 +1,17 @@
+"use client";
+
 import BlogCard from "./desing/BlogCard";
+import { useState } from "react";
+
+const INITIAL_POST_COUNT = 10;
+const POSTS_PER_LOAD = 12;
 
 export default function MainBlog({ posts, loadError = false }) {
+  const [visiblePostCount, setVisiblePostCount] = useState(
+    Math.min(INITIAL_POST_COUNT, posts.length),
+  );
+  const visiblePosts = posts.slice(0, visiblePostCount);
+
   return (
     <section className="w-full bg-[#f7f8fa] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto w-full max-w-6xl">
@@ -26,26 +37,42 @@ export default function MainBlog({ posts, loadError = false }) {
           </p>
         ) : posts.length > 0 ? (
           <div className="space-y-10 sm:space-y-12">
-            <BlogCard post={posts[0]} variant="featured" />
+            <BlogCard post={visiblePosts[0]} variant="featured" />
 
-            {posts.length > 1 && (
+            {visiblePosts.length > 1 && (
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-                {posts.slice(1, 3).map((post) => (
+                {visiblePosts.slice(1, 3).map((post) => (
                   <BlogCard key={post.slug} post={post} variant="grid" />
                 ))}
               </div>
             )}
 
-            {posts.length > 3 && (
+            {visiblePosts.length > 3 && (
               <div className="space-y-4">
                 <h2 className="text-xl font-bold tracking-tight text-slate-950">
                   More from the journal
                 </h2>
                 <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white px-4 sm:px-6">
-                  {posts.slice(3).map((post) => (
+                  {visiblePosts.slice(3).map((post) => (
                     <BlogCard key={post.slug} post={post} />
                   ))}
                 </div>
+              </div>
+            )}
+
+            {visiblePostCount < posts.length && (
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisiblePostCount((count) =>
+                      Math.min(count + POSTS_PER_LOAD, posts.length),
+                    )
+                  }
+                  className="rounded-full border border-blue-800 px-6 py-3 text-sm font-bold text-blue-800 transition-colors hover:bg-blue-800 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
+                >
+                  Show more
+                </button>
               </div>
             )}
           </div>
